@@ -90,7 +90,7 @@ function scanCustomer(cardName) {
 
 
     // CHECK REWARD
-    if (customer.points >= 10) {
+    if (customer.points >= 40) {
 
     document.getElementById("status").innerText =
         "🎉 FREE LAUNDRY UNLOCKED!";
