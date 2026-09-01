@@ -92,14 +92,31 @@ function scanCustomer(cardName) {
     // CHECK REWARD
     if (customer.points >= 10) {
 
-        document.getElementById("status").innerText =
-            "🎉 FREE LAUNDRY UNLOCKED!";
+    document.getElementById("status").innerText =
+        "🎉 FREE LAUNDRY UNLOCKED!";
 
-    } else {
+    document.getElementById("points").innerText =
+        customer.points;
+
+    setTimeout(function () {
+
+        customer.points = 0;
+
+        saveCustomers();
+
+        document.getElementById("points").innerText =
+            customer.points;
 
         document.getElementById("status").innerText =
-            "✅ Point automatically added!";
-    }
+            "🔄 Points reset. Ready for next loyalty card!";
+
+    }, 3000);
+
+} else {
+
+    document.getElementById("status").innerText =
+        "✅ Point automatically added!";
+}
 }
 
 
