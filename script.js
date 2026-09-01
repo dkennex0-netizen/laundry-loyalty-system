@@ -212,3 +212,5 @@ window.addEventListener("load", function () {
     );
 
 });
+customers["Maria Santos"].points = 0;
+saveCustomers();
