@@ -231,6 +231,7 @@ window.addEventListener("load", function () {
         "afterend",
         button
     );
-
+ // LOAD SAVED CUSTOMERS AND POINTS
+    displayCustomers();
 });
-displayCustomers();
+
