@@ -15,9 +15,45 @@ function saveCustomers() {
         "customers",
         JSON.stringify(customers)
     );
+
+    displayCustomers();
 }
 
+// DISPLAY REGISTERED CUSTOMERS
+function displayCustomers() {
 
+    const customerList =
+        document.getElementById("customerList");
+
+    // Stop if customerList does not exist
+    if (!customerList) {
+        return;
+    }
+
+    customerList.innerHTML = "";
+
+    const customerNames = Object.keys(customers);
+
+    if (customerNames.length === 0) {
+
+        customerList.innerHTML =
+            "<p>No registered customers yet.</p>";
+
+        return;
+    }
+
+    customerNames.forEach(function (name) {
+
+        const customer = customers[name];
+
+        customerList.innerHTML += `
+            <div>
+                <strong>${customer.name}</strong>
+                - ${customer.points} Points
+            </div>
+        `;
+    });
+}
 // REGISTER NEW CUSTOMER
 function registerCustomer() {
 
@@ -197,3 +233,4 @@ window.addEventListener("load", function () {
     );
 
 });
+displayCustomers();
