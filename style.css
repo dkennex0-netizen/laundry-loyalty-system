@@ -1,0 +1,37 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    margin-top: 80px;
+}
+
+.customer-card {
+    background: white;
+    padding: 30px;
+    margin: 20px auto;
+    width: 300px;
+    border-radius: 15px;
+}
+
+.register-card {
+    background: white;
+    padding: 30px;
+    margin: 20px auto;
+    width: 300px;
+    border-radius: 15px;
+}
+
+input {
+    padding: 10px;
+    width: 90%;
+}
+
+button {
+    padding: 10px 20px;
+    cursor: pointer;
+}
