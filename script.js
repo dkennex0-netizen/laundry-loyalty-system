@@ -18,28 +18,25 @@ function saveCustomers() {
 // Register customer
 function registerCustomer() {
 
-    const name =
-        document.getElementById("newCustomerName").value.trim();
-
+    const name = document
+        .getElementById("newCustomerName")
+        .value
+        .trim();
 
     if (name === "") {
         alert("Please enter customer name");
         return;
     }
 
-
-    // Check if already registered
     if (customers[name]) {
         alert("Customer already exists!");
         return;
     }
 
-
     customers[name] = {
         name: name,
         points: 0
     };
-
 
     saveCustomers();
 
@@ -49,11 +46,10 @@ function registerCustomer() {
 }
 
 
-// Scan customer and automatically add point
+// Add point automatically
 function scanCustomer(cardName) {
 
     const customer = customers[cardName];
-
 
     if (!customer) {
 
@@ -63,19 +59,15 @@ function scanCustomer(cardName) {
         return;
     }
 
-
-    // Automatic +1 point
     customer.points++;
 
     saveCustomers();
-
 
     document.getElementById("customerName").innerText =
         customer.name;
 
     document.getElementById("points").innerText =
         customer.points;
-
 
     if (customer.points >= 10) {
 
@@ -87,5 +79,57 @@ function scanCustomer(cardName) {
         document.getElementById("status").innerText =
             "✅ Point automatically added!";
     }
-
 }
+
+
+// NFC SCANNING
+async function startNFC() {
+
+    if (!("NDEFReader" in window)) {
+
+        document.getElementById("status").innerText =
+            "❌ NFC is not supported on this device/browser.";
+
+        return;
+    }
+
+    try {
+
+        const ndef = new NDEFReader();
+
+        await ndef.scan();
+
+        document.getElementById("status").innerText =
+            "📱 Ready! Tap NFC card.";
+
+        ndef.addEventListener("reading", event => {
+
+            for (const record of event.message.records) {
+
+                if (record.recordType === "text") {
+
+                    const decoder = new TextDecoder(
+                        record.encoding || "utf-8"
+                    );
+
+                    const cardName =
+                        decoder.decode(record.data).trim();
+
+                    scanCustomer(cardName);
+
+                    break;
+                }
+            }
+        });
+
+    } catch (error) {
+
+        document.getElementById("status").innerText =
+            "❌ NFC error: " + error.message;
+
+    }
+}
+
+
+// Start NFC scanning when page opens
+startNFC();
