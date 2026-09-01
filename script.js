@@ -57,11 +57,11 @@ function registerCustomer() {
 }
 
 
+
 // ADD POINT AFTER NFC SCAN
 function scanCustomer(cardName) {
 
     const customer = customers[cardName];
-
 
     if (!customer) {
 
@@ -71,34 +71,24 @@ function scanCustomer(cardName) {
         return;
     }
 
-
     // ADD 1 POINT
     customer.points++;
 
-
     // SAVE POINTS
     saveCustomers();
-
 
     // DISPLAY CUSTOMER
     document.getElementById("customerName").innerText =
         customer.name;
 
-
     document.getElementById("points").innerText =
         customer.points;
-
 
     // CHECK REWARD
     if (customer.points >= 10) {
 
-    document.getElementById("status").innerText =
-        "🎉 FREE LAUNDRY UNLOCKED!";
-
-    document.getElementById("points").innerText =
-        customer.points;
-
-    setTimeout(function () {
+        document.getElementById("status").innerText =
+            "🎉 FREE LAUNDRY UNLOCKED!";
 
         customer.points = 0;
 
@@ -107,16 +97,11 @@ function scanCustomer(cardName) {
         document.getElementById("points").innerText =
             customer.points;
 
+    } else {
+
         document.getElementById("status").innerText =
-            "🔄 Points reset. Ready for next loyalty card!";
-
-    }, 3000);
-
-} else {
-
-    document.getElementById("status").innerText =
-        "✅ Point automatically added!";
-}
+            "✅ Point automatically added!";
+    }
 }
 
 
@@ -212,6 +197,3 @@ window.addEventListener("load", function () {
     );
 
 });
-
-customers["Maria Santos"].points = 0;
-saveCustomers();
