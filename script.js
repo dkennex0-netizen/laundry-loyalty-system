@@ -1,6 +1,9 @@
 // LOAD SAVED CUSTOMERS
 let customers = JSON.parse(localStorage.getItem("customers"));
 
+let lastScanTime = 0;
+const scanCooldown = 3000; // 3 seconds
+
 if (!customers) {
     customers = {};
 }
@@ -139,11 +142,21 @@ async function startNFC() {
                         new TextDecoder(record.encoding || "utf-8");
 
                     const cardName =
-                        decoder.decode(record.data).trim();
+    decoder.decode(record.data).trim();
 
 
-                    // ADD POINT
-                    scanCustomer(cardName);
+// Prevent duplicate scanning
+const currentTime = Date.now();
+
+if (currentTime - lastScanTime < scanCooldown) {
+    return;
+}
+
+lastScanTime = currentTime;
+
+
+// Add only 1 point
+scanCustomer(cardName);
 
                     break;
                 }
