@@ -1,4 +1,4 @@
-// Load saved customers
+// LOAD SAVED CUSTOMERS
 let customers = JSON.parse(localStorage.getItem("customers"));
 
 if (!customers) {
@@ -6,7 +6,7 @@ if (!customers) {
 }
 
 
-// Save database
+// SAVE CUSTOMERS
 function saveCustomers() {
     localStorage.setItem(
         "customers",
@@ -15,7 +15,7 @@ function saveCustomers() {
 }
 
 
-// Register customer
+// REGISTER NEW CUSTOMER
 function registerCustomer() {
 
     const name = document
@@ -23,52 +23,70 @@ function registerCustomer() {
         .value
         .trim();
 
+
     if (name === "") {
         alert("Please enter customer name");
         return;
     }
+
 
     if (customers[name]) {
         alert("Customer already exists!");
         return;
     }
 
+
     customers[name] = {
         name: name,
         points: 0
     };
 
+
     saveCustomers();
+
 
     alert(name + " registered successfully!");
 
-    document.getElementById("newCustomerName").value = "";
+
+    document
+        .getElementById("newCustomerName")
+        .value = "";
 }
 
 
-// Add point automatically
+// ADD POINT AFTER NFC SCAN
 function scanCustomer(cardName) {
 
     const customer = customers[cardName];
 
+
     if (!customer) {
 
         document.getElementById("status").innerText =
-            "❌ Customer not found";
+            "❌ Customer not found: " + cardName;
 
         return;
     }
 
+
+    // ADD 1 POINT
     customer.points++;
 
+
+    // SAVE POINTS
     saveCustomers();
 
+
+    // DISPLAY CUSTOMER
     document.getElementById("customerName").innerText =
         customer.name;
+
 
     document.getElementById("points").innerText =
         customer.points;
 
+
+    // CHECK REWARD
     if (customer.points >= 10) {
 
         document.getElementById("status").innerText =
@@ -82,39 +100,49 @@ function scanCustomer(cardName) {
 }
 
 
-// NFC SCANNING
+// START NFC SCANNER
 async function startNFC() {
 
+    const status = document.getElementById("status");
+
+
+    // CHECK NFC SUPPORT
     if (!("NDEFReader" in window)) {
 
-        document.getElementById("status").innerText =
-            "❌ NFC is not supported on this device/browser.";
+        status.innerText =
+            "❌ Web NFC is not supported in this browser.";
 
         return;
     }
+
 
     try {
 
         const ndef = new NDEFReader();
 
+        // START SCANNING
         await ndef.scan();
 
-        document.getElementById("status").innerText =
-            "📱 Ready! Tap NFC card.";
+        status.innerText =
+            "📱 NFC Scanner is ON! Tap the customer card.";
 
+
+        // WHEN NFC CARD IS READ
         ndef.addEventListener("reading", event => {
 
             for (const record of event.message.records) {
 
+                // READ TEXT RECORD
                 if (record.recordType === "text") {
 
-                    const decoder = new TextDecoder(
-                        record.encoding || "utf-8"
-                    );
+                    const decoder =
+                        new TextDecoder(record.encoding || "utf-8");
 
                     const cardName =
                         decoder.decode(record.data).trim();
 
+
+                    // ADD POINT
                     scanCustomer(cardName);
 
                     break;
@@ -124,12 +152,33 @@ async function startNFC() {
 
     } catch (error) {
 
-        document.getElementById("status").innerText =
-            "❌ NFC error: " + error.message;
+        status.innerText =
+            "❌ NFC Error: " + error.message;
 
     }
 }
 
 
-// Start NFC scanning when page opens
-startNFC();
+// CREATE NFC BUTTON AUTOMATICALLY
+window.addEventListener("load", function () {
+
+    const status = document.getElementById("status");
+
+    const button = document.createElement("button");
+
+    button.innerText = "📱 Start NFC Scanner";
+
+    button.style.margin = "15px";
+    button.style.padding = "12px 20px";
+    button.style.fontSize = "16px";
+
+    button.onclick = startNFC;
+
+
+    // PUT BUTTON AFTER STATUS
+    status.insertAdjacentElement(
+        "afterend",
+        button
+    );
+
+});
