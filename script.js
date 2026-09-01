@@ -90,7 +90,7 @@ function scanCustomer(cardName) {
 
 
     // CHECK REWARD
-    if (customer.points >= 40) {
+    if (customer.points >= 10) {
 
     document.getElementById("status").innerText =
         "🎉 FREE LAUNDRY UNLOCKED!";
@@ -213,3 +213,5 @@ window.addEventListener("load", function () {
 
 });
 
+customers["Maria Santos"].points = 0;
+saveCustomers();
